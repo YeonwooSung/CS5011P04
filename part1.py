@@ -1,15 +1,21 @@
 from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import OneHotEncoder
-from sklearn.externals import joblib
+#from sklearn.externals import joblib
+import joblib
 import pandas as pd
 import sys
+from warnings import simplefilter
+
+
+# use the simplefilter to filter the FutureWarning
+simplefilter(action='ignore', category=FutureWarning)
 
 
 def train_classifier(file_path='./tickets.csv'):
     print("Creating classifier...")
 
-    #Creating a new classifier
-    clf = MLPClassifier(solver='sgd', learning_rate_init=0.5, hidden_layer_sizes=(5,), verbose=True, momentum=0.3, activation='logistic', n_iter_no_change=5000, max_iter=10000)
+    # Creating a new classifier - Use MLPClassifier (Multi-Layer Perceptron Classifier)
+    clf = MLPClassifier(solver='sgd', learning_rate_init=0.5, hidden_layer_sizes=(9,), verbose=True, momentum=0.3, activation='logistic', n_iter_no_change=5000, max_iter=10000)
     print(clf)
 
     print("\nReading file.")
@@ -29,14 +35,14 @@ def train_classifier(file_path='./tickets.csv'):
     X = X.replace(regex={r'Yes': 1, r'No': 0})  # Encoding question data
 
     enc = OneHotEncoder(handle_unknown='ignore') # Use the One-Hot encoder to encode the input data
-    enc = enc.fit(df_countries)  # Encoding locations
-    encoded_countries = enc.transform(df_countries).toarray()
+    enc = enc.fit(df_countries)  # Encoding response team
+    encoded_team = enc.transform(df_countries).toarray()
     print("Data encoded.")
 
     print("\nTraining...")
-    clf.fit(X.as_matrix(), encoded_countries) # Training classifier on encoded data
+    clf.fit(X.values, encoded_team)  # Training classifier on encoded data
 
-    print("\nTraining score: %f" % clf.score(X.as_matrix(), encoded_countries))  # Scoring classifier
+    print("\nTraining score: %f" % clf.score(X.values, encoded_team))  # Scoring classifier
 
     model_name = 'output'
     print("\nSaving model as " + model_name + ".joblib")  # Saving model

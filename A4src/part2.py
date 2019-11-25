@@ -3,12 +3,16 @@ import pandas as pd
 from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import OneHotEncoder
 import joblib
+from warnings import simplefilter
+
+
+# use the simplefilter to filter the FutureWarning
+simplefilter(action='ignore', category=FutureWarning)
 
 
 def ask_user():
-    # Reading weight file
-    file_to_use = "./tickets.csv"
-    output_file_path = './output.joblib'
+    file_to_use = "./tickets.csv"        # file path of input file
+    output_file_path = './output.joblib' # file path of weight file
     df = pd.read_csv(file_to_use)
     clf = MLPClassifier()
 
@@ -98,15 +102,35 @@ def make_guess(answers, enc, clf, column_count):
 
 
 def update_data(answers, file_to_use, column_count):
+    question_str = "Please tell me the name of the Reponse team that could help you: "
+
     # Gets correct answer
-    response_team = input("Please tell me the name of the Reponse team that could help you")
+    response_team = input(question_str)
+
     yes = ""
     while yes != "y" and yes != "Y":
         yes = input("Is " + response_team + " correct?\n\t[y/n] >>")
         if yes == "n" or yes == "N":
             response_team = ""
             while response_team != "":
-                response_team = input("Please tell me your dream destination: ")
+                response_team = input(question_str)
+
+    yes = ""
+    new_feature = ""
+    while yes != "n" and yes != "N":  # Gets the new defining feature of new response team
+        yes = input("Is there a defining feature to this response team that we have not asked about?\n\t[y/n] >>")
+        if yes == "Y" or yes == "y":
+            new_feature = input("Please tell me this new feature!: ")
+            yes = "n"
+
+    decoded_answers = [] # Decodes users answers
+
+    # iterate the values in the list of answers
+    for answer in answers:
+        if answer == 1:
+            decoded_answers.append("Yes")
+        elif answer == 0:
+            decoded_answers.append("No")
 
     #TODO ??
 

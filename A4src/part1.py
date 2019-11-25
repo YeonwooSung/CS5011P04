@@ -12,10 +12,16 @@ simplefilter(action='ignore', category=FutureWarning)
 
 
 def train_classifier(file_path='./tickets.csv'):
+    """
+    This function trains the classifier for the neural network for the Help Desk System.
+    After finish training, this function generates the output file 'output.joblib'.
+
+    :param file_path: The file path of the input file. (default value = './tickets.csv')
+    """
     print("Creating classifier...")
 
     # Creating a new classifier - Use MLPClassifier (Multi-Layer Perceptron Classifier)
-    clf = MLPClassifier(solver='sgd', learning_rate_init=0.5, hidden_layer_sizes=(9,), verbose=True, momentum=0.3, activation='logistic', n_iter_no_change=5000, max_iter=10000)
+    clf = MLPClassifier(solver='sgd', learning_rate_init=0.5, hidden_layer_sizes=(5,), verbose=True, momentum=0.3, activation='logistic', n_iter_no_change=5000, max_iter=10000)
     print(clf)
 
     print("\nReading file.")
@@ -25,14 +31,14 @@ def train_classifier(file_path='./tickets.csv'):
 
     X_cols = [i for i in range(0, num_of_columns - 1)]
 
-    # Reading only question columns
+    # Reading only tag columns
     X = pd.read_csv(file_path, usecols=X_cols)
 
-    # Reading only location column
+    # Reading only ResponseTeam column
     df_countries = pd.read_csv(file_path, usecols=[num_of_columns - 1])
 
     print("\nEncoding data...")
-    X = X.replace(regex={r'Yes': 1, r'No': 0})  # Encoding question data
+    X = X.replace(regex={r'Yes': 1, r'No': 0})  # Encoding tag data
 
     enc = OneHotEncoder(handle_unknown='ignore') # Use the One-Hot encoder to encode the input data
     enc = enc.fit(df_countries)  # Encoding response team
@@ -44,9 +50,9 @@ def train_classifier(file_path='./tickets.csv'):
 
     print("\nTraining score: %f" % clf.score(X.values, encoded_team))  # Scoring classifier
 
-    model_name = 'output'
-    print("\nSaving model as " + model_name + ".joblib")  # Saving model
-    joblib.dump(clf, open('./' + model_name + '.joblib', 'wb'))
+    # Saving model
+    print("\nSaving model as output.joblib")
+    joblib.dump(clf, open('./output.joblib', 'wb'))
     print("Model saved.")
 
 

@@ -32,14 +32,14 @@ def train_classifier_with_GridSearchCV():
 
     X_cols = [i for i in range(0, num_of_columns - 1)]
 
-    # Reading only question columns
+    # Reading only tag columns
     X = pd.read_csv(file_path, usecols=X_cols)
 
-    # Reading only location column
+    # Reading only ResponseTeam column
     df_countries = pd.read_csv(file_path, usecols=[num_of_columns - 1])
 
     print("\nEncoding data...")
-    X = X.replace(regex={r'Yes': 1, r'No': 0})  # Encoding question data
+    X = X.replace(regex={r'Yes': 1, r'No': 0})  # Encoding tag data
 
     enc = OneHotEncoder(handle_unknown='ignore') # Use the One-Hot encoder to encode the input data
     enc = enc.fit(df_countries)  # Encoding response team

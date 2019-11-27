@@ -4,14 +4,14 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import OneHotEncoder
 import joblib
 from warnings import simplefilter
+import part1
 
 
 # use the simplefilter to filter the FutureWarning
 simplefilter(action='ignore', category=FutureWarning)
 
 
-def ask_user():
-    file_to_use = "./tickets.csv"        # file path of input file
+def ask_user(file_to_use="./tickets.csv"):
     output_file_path = './output.joblib' # file path of weight file
     df = pd.read_csv(file_to_use)
     clf = MLPClassifier()
@@ -101,7 +101,7 @@ def make_guess(answers, enc, clf, column_count):
             print("Let's continue!\n")
 
 
-def update_data(answers, file_to_use, column_count):
+def update_data(answers, file_to_use, column_count, new_file_name='./newTickets.csv'):
     question_str = "Please tell me the name of the Reponse team that could help you: "
 
     # Gets correct answer
@@ -132,7 +132,57 @@ def update_data(answers, file_to_use, column_count):
         elif answer == 0:
             decoded_answers.append("No")
 
-    #TODO ??
+    original_file = pd.read_csv(file_to_use)
+
+    # Check if new feature given. If so, builds a new column in data to append Yes
+    if new_feature != "":
+        new_col_values = []
+
+        # use for loop to loop n times where n is the length of the file
+        for i in range(len(original_file)):
+            new_col_values.append("No")
+
+        original_file.insert(loc=column_count-1, column=new_feature, value=new_col_values) #insert a new column
+        decoded_answers.append("Yes") # append "Yes" for the new column
+
+    decoded_answers.append(response_team) # add the name of the new response team that will be used for retraining
+    print('New row : ', decoded_answers)
+
+    new_row = pd.DataFrame([decoded_answers], columns=original_file.columns)
+    print("Adding new row to data : ", decoded_answers)
+
+    #Adding new data entry
+    new_file = original_file.append(new_row, ignore_index=True)
+
+    print("Entry added.")
+    update_additions(response_team, new_feature, new_file_name) # log the new additions
+
+    # Overwriting original data file
+    new_file.to_csv(new_file_name, index=False)
+
+    # retrain the classifier with the new dataset
+    part1.train_classifier(new_file_name)
+    print("\nClassifier retrained...")
+
+
+def update_additions(response_team, new_feature, file_path, log_file_path='./additions_log.csv'):
+    additions_data = pd.read_csv(log_file_path) # reads csv file
+    new_entry = [response_team, "Response Team", file_path]
+
+    # make a new row for the new response team
+    new_row = pd.DataFrame([new_entry], columns=additions_data.columns)
+
+    # append a new row to the data frame
+    additions_data = additions_data.append(new_row, ignore_index=True)
+
+    # check if there is a new feature is added
+    if new_feature != "":
+        new_entry = [new_feature, "Feature", file_path]
+        new_row = pd.DataFrame([new_entry], columns=additions_data.columns)
+        additions_data = additions_data.append(new_row, ignore_index=True)
+
+    additions_data.to_csv(log_file_path, index=False) # update the csv file to log the new additions
+
 
 
 if __name__ == "__main__":

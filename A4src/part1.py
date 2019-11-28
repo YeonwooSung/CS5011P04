@@ -1,6 +1,5 @@
 from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import OneHotEncoder
-#from sklearn.externals import joblib
 import joblib
 import pandas as pd
 import sys

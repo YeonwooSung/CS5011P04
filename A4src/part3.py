@@ -23,7 +23,7 @@ def train_classifier_XGBClassifier(file_path='./tickets.csv', plot_feature_impor
     print("Creating classifier...")
 
     # Creating a new classifier - RandomForestClassifier
-    clf = RandomForestClassifier(random_state=3, n_jobs=-1)
+    clf = RandomForestClassifier(random_state=3, n_jobs=-1, warm_start=True)
     print(clf)
 
     print("\nReading file.")

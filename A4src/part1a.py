@@ -52,7 +52,23 @@ def train_classifier_with_GridSearchCV():
     print("\nTraining score: %f" % clf.score(X.values, encoded_team))  # Scoring classifier
     print("\nBest parameters: ", clf.best_params_) # print out the best parameters
 
+    return clf.best_params_
+
+
+def findBestParams_loopN(n=10):
+    best_params = []
+
+    for i in range(n):
+        print('Loop {0}'.format(i))
+        best_param = train_classifier_with_GridSearchCV()
+        best_params.append(best_param)
+        print('\n')
+
+    print('\nPrint out best parameters')
+    for params in best_params:
+        print(params)
+
 
 if __name__ == "__main__":
-    train_classifier_with_GridSearchCV()
-
+    # findBestParams_loopN() method iterates the loop n times to run find best parameters with GridSearchCV
+    findBestParams_loopN()

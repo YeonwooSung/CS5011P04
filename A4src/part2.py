@@ -72,8 +72,11 @@ def make_guess(answers, enc, clf, column_count):
         for i in range(diff):
             current_answers.append(0)
 
+
+    # Predict the possible output by using predict() method of the classifier
     to_predict = [current_answers]
-    prediction = enc.inverse_transform(clf.predict(to_predict))[0][0]  # Makes prediction
+    predict_res = clf.predict(to_predict)
+    prediction = enc.inverse_transform(predict_res)[0][0]
 
     # check if the program could make a prediction
     if prediction != None:

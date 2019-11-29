@@ -58,7 +58,7 @@ def ask_user(file_to_use="./tickets.csv"):
 
     make_guess(answers, enc, clf, column_count)
 
-    #TODO if the program not finished, then that means that the prediction is failed
+    # If the program not finished, then that means that the prediction is failed
     update_data(answers, file_to_use, column_count)
 
 

@@ -18,7 +18,7 @@ def train_classifier_with_GridSearchCV():
     print("Creating classifier...")
 
     parameters = {
-        'solver': ['sgd'], 'learning_rate_init': [0.45, 0.5, 0.55], 'hidden_layer_sizes': np.arange(1,10), 
+        'solver': ['sgd'], 'learning_rate_init': [0.5], 'hidden_layer_sizes': np.arange(1,10), 
         'verbose': [True], 'momentum': [0.3], 'activation': ['logistic'], 'n_iter_no_change': [5000], 'max_iter': [1000]
     }
 

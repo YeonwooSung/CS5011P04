@@ -54,9 +54,11 @@ def ask_user(file_to_use="./tickets.csv"):
 
         # check if count is equal to (column_count / 2) to check if the agent could make an early guess
         if count == column_count_div2Int:
-            make_guess(answers, enc, clf, column_count)
+            if make_guess(answers, enc, clf, column_count):
+                return
 
-    make_guess(answers, enc, clf, column_count)
+    if make_guess(answers, enc, clf, column_count):
+        return
 
     # If the program not finished, then that means that the prediction is failed
     update_data(answers, file_to_use, column_count)
@@ -91,7 +93,7 @@ def make_guess(answers, enc, clf, column_count):
         # check the user input
         if is_correct == "y":
             print("Cool! I will route you to the " + prediction + " team right now.")
-            sys.exit(1)
+            return True
         elif is_correct == "n":
             if earlyPrediction:
                 print("Oh dear. Let's continue...")
@@ -102,9 +104,11 @@ def make_guess(answers, enc, clf, column_count):
 
         if earlyPrediction:
             print("Let's continue!\n")
+    
+    return False
 
 
-def update_data(answers, file_to_use, column_count, new_file_name='./newTickets.csv'):
+def update_data(answers, file_to_use, column_count, new_file_name='./tickets.csv'):
     question_str = "Please tell me the name of the Reponse team that could help you: "
 
     # Gets correct answer
@@ -168,7 +172,7 @@ def update_data(answers, file_to_use, column_count, new_file_name='./newTickets.
     print("\nClassifier retrained...")
 
 
-def update_additions(response_team, new_feature, file_path, log_file_path='./additions_log.csv'):
+def update_additions(response_team, new_feature, file_path, log_file_path='./additions.csv'):
     additions_data = pd.read_csv(log_file_path) # reads csv file
     new_entry = [response_team, "Response Team", file_path]
 

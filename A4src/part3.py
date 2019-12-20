@@ -12,7 +12,7 @@ from warnings import simplefilter
 simplefilter(action='ignore', category=FutureWarning)
 
 
-def train_classifier_XGBClassifier(file_path='./tickets.csv', plot_feature_importance=True):
+def train_classifier_RandomForestClassifier(file_path='./tickets.csv', plot_feature_importance=True):
     """
     This function trains the RandomForestClassifier for the Help Desk System.
     After finish training, this function generates the output file 'output.joblib'.
@@ -72,5 +72,4 @@ def train_classifier_XGBClassifier(file_path='./tickets.csv', plot_feature_impor
 
 if __name__ == "__main__":
     print("Using file : tickets.csv")
-    train_classifier_XGBClassifier()
-
+    train_classifier_RandomForestClassifier()

@@ -7,12 +7,14 @@ import seaborn as sns
 import sys
 from warnings import simplefilter
 
+import part1
+
 
 # use the simplefilter to filter the FutureWarning
 simplefilter(action='ignore', category=FutureWarning)
 
 
-def train_classifier_RandomForestClassifier(file_path='./tickets.csv', plot_feature_importance=True):
+def train_classifier_RandomForestClassifier(file_path='./tickets.csv', plot_feature_importance=True, do_cv=False):
     """
     This function trains the RandomForestClassifier for the Help Desk System.
     After finish training, this function generates the output file 'output.joblib'.
@@ -57,6 +59,12 @@ def train_classifier_RandomForestClassifier(file_path='./tickets.csv', plot_feat
     joblib.dump(clf, open('./output.joblib', 'wb'))
     print("Model saved.")
 
+
+    # check if we need to run the cross validation testing
+    if do_cv:
+        print("perform the cross validation")
+        part1.cross_validate(clf, X, encoded_team)
+
     # check if the program should plot the feature importance
     if (plot_feature_importance):
         # get the importances values of features by using the feature_importances_ attribute of RandomForestClassifier
@@ -72,4 +80,4 @@ def train_classifier_RandomForestClassifier(file_path='./tickets.csv', plot_feat
 
 if __name__ == "__main__":
     print("Using file : tickets.csv")
-    train_classifier_RandomForestClassifier()
+    train_classifier_RandomForestClassifier(do_cv=True)

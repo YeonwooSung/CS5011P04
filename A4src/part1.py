@@ -1,5 +1,6 @@
 from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import OneHotEncoder
+from sklearn.model_selection import cross_val_score
 import joblib
 import pandas as pd
 import sys
@@ -10,12 +11,13 @@ from warnings import simplefilter
 simplefilter(action='ignore', category=FutureWarning)
 
 
-def train_classifier(file_path='./tickets.csv'):
+def train_classifier(file_path='./tickets.csv', do_cv=False):
     """
     This function trains the classifier for the neural network for the Help Desk System.
     After finish training, this function generates the output file 'output.joblib'.
 
     :param file_path: The file path of the input file. (default value = './tickets.csv')
+    :param do_cv: The boolean value to check if this function should do the cross validation
     """
     print("Creating classifier...")
 
@@ -55,12 +57,23 @@ def train_classifier(file_path='./tickets.csv'):
     print("Model saved.")
 
 
+    # check if the program should perform the cross validation
+    if do_cv:
+        # perform the cross validation
+        cross_validate(clf, X, encoded_team)
+
+
+def cross_validate(clf, x, y, cv=3):
+    print("Start Running the Cross Validation")
+    print('cross_val_score :', cross_val_score(clf, x, y, cv=cv))
+
+
 if __name__ == "__main__":
     if len(sys.argv) == 2:
         file_path = sys.argv[1]
         print("Using file : " + file_path)
-        train_classifier(file_path)
+        train_classifier(file_path, True)
     else:
         print("Using file : tickets.csv")
-        train_classifier()
+        train_classifier(do_cv=True)
 
